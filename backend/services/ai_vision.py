@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageFont
 from config import OPENAI_API_KEY, GEMINI_API_KEY
 
 # Configure once at module level
-genai.configure(api_key=GEMINI_API_KEY or "AIzaSyDrqmLrwwYI9zbjtMxauLHpDCyeNAbG-Fk")
+genai.configure(api_key=GEMINI_API_KEY)
 
 MEDICAL_SYSTEM_INSTRUCTION = """
 You are a specialized Medical Imaging AI with expertise in fracture detection and localization.
