@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import api from '../api/client';
+import api, { API_URL } from '../api/client';
 import { useToast } from './Toast';
 import { 
   CloudUpload, FileImage, Cpu, CheckCircle, AlertTriangle, 
@@ -166,7 +166,7 @@ export default function ScanUpload({ selectedPatient, onScanComplete }) {
             {/* Annotated Image */}
             <div className="glass neon-glow-strong" style={{ padding: '24px', borderRadius: '24px', position: 'relative' }}>
               <div style={{ position: 'absolute', top: '16px', right: '16px', padding: '4px 12px', borderRadius: '8px', background: 'rgba(0,0,0,0.6)', border: '1px solid var(--color-neon)', fontSize: '10px', color: 'var(--color-neon)', fontWeight: '800', zIndex: 2 }}>AI ANNOTATED VIEW</div>
-              <img src={`/api/scans/${result.id}/annotated`} style={{ width: '100%', borderRadius: '14px', border: '1px solid var(--color-border)' }} />
+              <img src={`${API_URL}/scans/${result.id}/annotated`} style={{ width: '100%', borderRadius: '14px', border: '1px solid var(--color-border)' }} />
               
               {/* Fracture region info cards */}
               <div style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
