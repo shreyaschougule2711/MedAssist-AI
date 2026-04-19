@@ -28,6 +28,11 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, #0A0A0A 0%, #0F2A2E 100%);
@@ -36,6 +41,14 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent iOS zoom on input focus */
+@media screen and (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
 }
 
 ::-webkit-scrollbar { width: 6px; }
@@ -90,6 +103,8 @@ body {
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(46, 230, 201, 0.3);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 .btn-primary::before {
   content: '';
@@ -136,10 +151,12 @@ body {
   border: 1px solid var(--color-border);
   border-radius: 12px;
   color: var(--color-text-primary);
-  font-size: 14px;
+  font-size: 16px;
   font-family: 'Inter', sans-serif;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
+  -webkit-appearance: none;
+  appearance: none;
 }
 .input-field:focus {
   border-color: var(--color-neon);
@@ -156,6 +173,7 @@ textarea.input-field {
 
 select.input-field {
   appearance: none;
+  -webkit-appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7C85' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
@@ -344,4 +362,280 @@ select.input-field {
 @keyframes dashboard-entry {
   from { opacity: 0; filter: blur(20px); transform: scale(1.05); }
   to { opacity: 1; filter: blur(0px); transform: scale(1); }
+}
+
+/* ============================== */
+/*     MOBILE OVERLAY SIDEBAR     */
+/* ============================== */
+.mobile-sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 998;
+  animation: fadeIn 0.2s ease;
+}
+
+.mobile-hamburger {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1001;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(10, 17, 40, 0.95);
+  border: 1px solid var(--color-border);
+  color: var(--color-neon);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* ============================== */
+/*      MOBILE MEDIA QUERIES      */
+/* ============================== */
+
+/* Tablets and below */
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .dashboard-bottom-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .report-main-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .report-content-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .scan-result-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Phones */
+@media (max-width: 768px) {
+  .mobile-hamburger {
+    display: flex !important;
+  }
+  .mobile-sidebar-overlay.active {
+    display: block;
+  }
+
+  /* Sidebar becomes a side drawer */
+  .sidebar-desktop {
+    position: fixed !important;
+    left: -280px;
+    top: 0;
+    bottom: 0;
+    width: 260px !important;
+    z-index: 999;
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border-radius: 0 !important;
+  }
+  .sidebar-desktop.mobile-open {
+    left: 0;
+  }
+  /* Hide the collapse toggle on mobile */
+  .sidebar-toggle-btn {
+    display: none !important;
+  }
+
+  /* Main content adjustments */
+  .main-content {
+    padding: 16px !important;
+    padding-top: 60px !important;
+  }
+  .main-topbar {
+    padding: 10px 16px !important;
+    padding-left: 60px !important;
+    flex-wrap: wrap;
+    gap: 8px !important;
+  }
+
+  /* Toast on mobile */
+  .toast-container {
+    top: auto;
+    bottom: 20px;
+    right: 12px;
+    left: 12px;
+  }
+  .toast {
+    min-width: unset;
+    width: 100%;
+    font-size: 13px;
+    padding: 12px 16px;
+  }
+
+  /* Stats go to 2 columns */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .stat-card {
+    padding: 16px !important;
+  }
+  .stat-value {
+    font-size: 24px !important;
+  }
+
+  /* Dashboard header */
+  .dashboard-welcome h1 {
+    font-size: 20px !important;
+  }
+
+  /* Bottom sections go full width */
+  .dashboard-bottom-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .dashboard-right-col {
+    order: -1;
+  }
+
+  /* Scan upload */
+  .scan-upload-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .scan-result-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .scan-type-btns {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Report view */
+  .report-main-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .report-sidebar {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+  }
+  .report-sidebar > div {
+    flex-shrink: 0;
+  }
+  .report-content-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .report-header {
+    flex-direction: column !important;
+    gap: 16px !important;
+    align-items: flex-start !important;
+  }
+
+  /* Patient panel */
+  .patient-form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .patient-cards-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .patient-header {
+    flex-direction: column !important;
+    gap: 12px !important;
+    align-items: flex-start !important;
+  }
+
+  /* Patient history */
+  .history-patient-card {
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+  .history-patient-info {
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100%;
+  }
+  .history-patient-actions {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .history-patient-actions button {
+    flex: 1;
+    min-width: auto !important;
+  }
+  .history-meta-row {
+    flex-direction: column !important;
+    gap: 4px !important;
+  }
+
+  /* Chat */
+  .chat-container {
+    height: calc(100vh - 140px) !important;
+    height: calc(100dvh - 140px) !important;
+  }
+  .chat-input-area {
+    padding: 12px !important;
+  }
+  .chat-message-bubble {
+    max-width: 90% !important;
+  }
+
+  /* Doctor notes */
+  .notes-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .notes-category-btns {
+    flex-wrap: wrap;
+  }
+
+  /* Global registry */
+  .registry-search-row {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .registry-search-row button {
+    width: 100%;
+  }
+
+  /* Login page */
+  .login-wrapper {
+    padding: 12px !important;
+  }
+  .login-card {
+    padding: 24px !important;
+    border-radius: 20px !important;
+  }
+  .login-title {
+    font-size: 26px !important;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .scan-type-btns {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .scan-type-btns button {
+    font-size: 11px !important;
+    padding: 10px 6px !important;
+  }
+}
+
+/* Safe area for notch devices */
+@supports (padding: env(safe-area-inset-top)) {
+  .mobile-hamburger {
+    top: calc(12px + env(safe-area-inset-top));
+  }
+  .main-content {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }

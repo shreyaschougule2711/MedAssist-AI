@@ -68,11 +68,9 @@ export default function PatientHistory({ selectedPatient, onNavigate }) {
         padding: '28px', marginBottom: '24px', borderRadius: '20px',
         background: 'linear-gradient(135deg, rgba(10,17,40,0.9), rgba(0,245,212,0.03))',
         position: 'relative', overflow: 'hidden', transition: 'all 0.3s ease'
-      }}
-      onMouseEnter={e => e.currentTarget.style.boxShadow = "0 0 30px 30px rgba(46,230,201,0.3), 0 8px 32px rgba(0,0,0,0.3)"}
-      onMouseLeave={e => e.currentTarget.style.boxShadow = ""}>
+      }}>
         <div style={{ position: 'absolute', top: '-50px', right: '-50px', width: '200px', height: '200px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,245,212,0.06), transparent 70%)' }} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', position: 'relative' }}>
+        <div className="history-patient-card" style={{ display: 'flex', alignItems: 'center', gap: '20px', position: 'relative' }}>
           <div style={{
             width: '64px', height: '64px', borderRadius: '18px',
             background: 'linear-gradient(135deg, var(--color-neon), var(--color-cyan))',
@@ -82,9 +80,9 @@ export default function PatientHistory({ selectedPatient, onNavigate }) {
           }}>
             {selectedPatient.name.charAt(0)}
           </div>
-          <div style={{ flex: 1 }}>
+          <div className="history-patient-info" style={{ flex: 1 }}>
             <h2 style={{ fontSize: '22px', fontWeight: '800', marginBottom: '4px' }}>{selectedPatient.name}</h2>
-            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+            <div className="history-meta-row" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
               {[
                 { label: 'Age', value: `${selectedPatient.age} years` },
                 { label: 'Gender', value: selectedPatient.gender },
@@ -99,7 +97,7 @@ export default function PatientHistory({ selectedPatient, onNavigate }) {
               ))}
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div className="history-patient-actions" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             {[
               { label: 'Upload Scan', panel: 'upload', color: '#00b4d8' },
               { label: 'AI Chat', panel: 'chat', color: '#7b61ff' },
@@ -107,14 +105,15 @@ export default function PatientHistory({ selectedPatient, onNavigate }) {
             ].map(a => (
               <button key={a.label} onClick={() => onNavigate(a.panel)} className="btn-primary" style={{
                 fontSize: '11px', padding: '8px 14px',
-                background: `${a.color}15`, color: a.color, borderColor: `${a.color}40`, border: '1px solid'
+                background: `${a.color}15`, color: a.color, borderColor: `${a.color}40`, border: '1px solid',
+                WebkitTapHighlightColor: 'transparent',
               }}>{a.label}</button>
             ))}
           </div>
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
         <Clock size={18} style={{ color: 'var(--color-neon)' }} />
         <h3 style={{ fontSize: '18px', fontWeight: '700' }}>Patient Timeline</h3>
         <span style={{ fontSize: '12px', color: 'var(--color-text-muted)', padding: '2px 10px', borderRadius: '20px', background: 'rgba(0,245,212,0.08)', border: '1px solid rgba(0,245,212,0.12)' }}>
@@ -140,16 +139,14 @@ export default function PatientHistory({ selectedPatient, onNavigate }) {
                 }}>
                   <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: item.color }} />
                 </div>
-                <div className="glass" style={{ padding: '16px 20px', borderRadius: '14px', borderLeft: `3px solid ${item.color}`, transition: 'all 0.25s ease' }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.transform = 'translateX(4px)'; }}
-                onMouseLeave={e => { e.currentTarget.style.background = ''; e.currentTarget.style.transform = 'none'; }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                <div className="glass" style={{ padding: '16px 20px', borderRadius: '14px', borderLeft: `3px solid ${item.color}`, transition: 'all 0.25s ease' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px', flexWrap: 'wrap', gap: '8px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <Icon size={16} style={{ color: item.color }} />
                       <span style={{ fontSize: '14px', fontWeight: '600' }}>{item.title}</span>
                     </div>
                   </div>
-                  <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: '1.5' }}>{item.detail}</p>
+                  <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: '1.5', wordBreak: 'break-word' }}>{item.detail}</p>
                 </div>
               </div>
             );

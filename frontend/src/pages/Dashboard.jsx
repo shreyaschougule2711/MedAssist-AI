@@ -8,20 +8,49 @@ import ChatAssistant from '../components/ChatAssistant';
 import ReportView from '../components/ReportView';
 import DoctorNotes from '../components/DoctorNotes';
 import PatientHistory from '../components/PatientHistory';
+import { Menu } from 'lucide-react';
 
 export default function Dashboard() {
   const [activePanel, setActivePanel] = useState('overview');
   const [collapsed, setCollapsed] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Close mobile menu when panel changes
+  const handleSetActivePanel = (panel) => {
+    setActivePanel(panel);
+    setMobileMenuOpen(false);
+  };
 
   const handleViewPatient = (patient) => {
     setSelectedPatient(patient);
     setActivePanel('history');
+    setMobileMenuOpen(false);
   };
 
   const handleNavigate = (panel) => {
     setActivePanel(panel);
+    setMobileMenuOpen(false);
   };
+
+  // Close sidebar on escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false);
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, []);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileMenuOpen]);
 
   const renderPanel = () => {
     switch (activePanel) {
@@ -47,17 +76,40 @@ export default function Dashboard() {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
-      <Sidebar activePanel={activePanel} setActivePanel={setActivePanel} collapsed={collapsed} setCollapsed={setCollapsed} />
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      {/* Mobile hamburger button */}
+      <button
+        className="mobile-hamburger"
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        aria-label="Toggle menu"
+      >
+        <Menu size={22} />
+      </button>
+
+      {/* Mobile overlay */}
+      <div
+        className={`mobile-sidebar-overlay ${mobileMenuOpen ? 'active' : ''}`}
+        onClick={() => setMobileMenuOpen(false)}
+      />
+
+      {/* Sidebar */}
+      <Sidebar
+        activePanel={activePanel}
+        setActivePanel={handleSetActivePanel}
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+        mobileOpen={mobileMenuOpen}
+      />
+
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
         {/* Top bar with patient context */}
         {selectedPatient && (
-          <div style={{
+          <div className="main-topbar" style={{
             padding: '10px 28px', borderBottom: '1px solid var(--color-border)',
             background: 'linear-gradient(90deg, rgba(0,245,212,0.04), rgba(0,180,216,0.02), transparent)',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             backdropFilter: 'blur(10px)',
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
               <div style={{
                 width: '8px', height: '8px', borderRadius: '50%',
                 background: 'var(--color-neon)',
@@ -75,7 +127,7 @@ export default function Dashboard() {
               </span>
             </div>
             <div style={{ display: 'flex', gap: '6px' }}>
-              <button onClick={() => setActivePanel('history')} style={{
+              <button onClick={() => handleSetActivePanel('history')} style={{
                 padding: '4px 12px', borderRadius: '8px', border: '1px solid rgba(0,245,212,0.15)',
                 background: 'rgba(0,245,212,0.06)', color: 'var(--color-neon)', fontSize: '12px',
                 cursor: 'pointer', transition: 'all 0.2s ease',
@@ -89,7 +141,7 @@ export default function Dashboard() {
           </div>
         )}
 
-        <div style={{ flex: 1, padding: '28px', overflowY: 'auto' }}>
+        <div className="main-content" style={{ flex: 1, padding: '28px', overflowY: 'auto' }}>
           {renderPanel()}
         </div>
       </main>

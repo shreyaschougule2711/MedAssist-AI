@@ -75,10 +75,8 @@ export default function DoctorNotes({ selectedPatient }) {
         <h2 style={{ fontSize: '22px', fontWeight: '800' }}>Doctor Notes</h2>
       </div>
 
-      <div className="glass neon-glow" style={{ padding: '24px', marginBottom: '32px', borderRadius: '16px', transition: 'all 0.3s ease' }}
-      onMouseEnter={e => e.currentTarget.style.boxShadow = "0 0 30px 30px rgba(46,230,201,0.3), 0 8px 32px rgba(0,0,0,0.3)"}
-      onMouseLeave={e => e.currentTarget.style.boxShadow = ""}>
-        <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
+      <div className="glass neon-glow" style={{ padding: '24px', marginBottom: '32px', borderRadius: '16px', transition: 'all 0.3s ease' }}>
+        <div className="notes-category-btns" style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
           {['observation', 'suggestion'].map(cat => {
             const Icon = categoryIcons[cat];
             const color = categoryColors[cat];
@@ -91,6 +89,7 @@ export default function DoctorNotes({ selectedPatient }) {
                 color: active ? color : 'var(--color-text-secondary)',
                 fontWeight: active ? '600' : '500',
                 display: 'flex', alignItems: 'center', gap: '6px', transition: 'all 0.2s',
+                WebkitTapHighlightColor: 'transparent',
               }}>
                 <Icon size={14} /> {categoryLabels[cat]}
               </button>
@@ -103,7 +102,7 @@ export default function DoctorNotes({ selectedPatient }) {
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+      <div className="notes-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
         {notes.map(note => {
           const Icon = categoryIcons[note.category] || StickyNote;
           const color = categoryColors[note.category] || 'var(--color-text-muted)';
@@ -114,9 +113,9 @@ export default function DoctorNotes({ selectedPatient }) {
                   <Icon size={12} style={{ color }} />
                   <span style={{ fontSize: '10px', fontWeight: '700', color, textTransform: 'uppercase' }}>{note.category}</span>
                 </div>
-                <button onClick={() => handleDelete(note.id)} style={{ padding: '6px', cursor: 'pointer', color: 'var(--color-text-muted)', background: 'transparent', border: 'none' }}><Trash2 size={14} /></button>
+                <button onClick={() => handleDelete(note.id)} style={{ padding: '6px', cursor: 'pointer', color: 'var(--color-text-muted)', background: 'transparent', border: 'none', WebkitTapHighlightColor: 'transparent' }}><Trash2 size={14} /></button>
               </div>
-              <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--color-text-primary)', marginBottom: '16px' }}>{note.content}</p>
+              <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--color-text-primary)', marginBottom: '16px', wordBreak: 'break-word' }}>{note.content}</p>
               <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <Clock size={12} /> {new Date(note.created_at).toLocaleString()}
               </div>

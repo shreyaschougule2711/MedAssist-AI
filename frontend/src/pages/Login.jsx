@@ -89,7 +89,7 @@ export default function Login() {
       <div style={{ position: 'absolute', top: '-20%', left: '-10%', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,245,212,0.06) 0%, transparent 70%)' }} />
       <div style={{ position: 'absolute', bottom: '-20%', right: '-10%', width: '600px', height: '600px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,180,216,0.04) 0%, transparent 70%)' }} />
 
-      <div className="animate-fadeIn" style={{ width: '100%', maxWidth: '460px', padding: '20px', position: 'relative', zIndex: 10 }}>
+      <div className="animate-fadeIn login-wrapper" style={{ width: '100%', maxWidth: '460px', padding: '20px', position: 'relative', zIndex: 10 }}>
         <div style={{ textAlign: 'center', marginBottom: '36px' }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
@@ -100,18 +100,19 @@ export default function Login() {
           }}>
             <Stethoscope size={36} color="var(--color-neon)" />
           </div>
-          <h1 style={{ fontSize: '32px', fontWeight: '800', marginBottom: '8px', letterSpacing: '-0.5px' }}>
+          <h1 className="login-title" style={{ fontSize: '32px', fontWeight: '800', marginBottom: '8px', letterSpacing: '-0.5px' }}>
             <span className="neon-text">MedAssist</span> AI
           </h1>
           <p style={{ color: 'var(--color-text-muted)', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '2px' }}>Doctor Portal Core</p>
         </div>
 
-        <div className="glass neon-glow-strong" style={{ padding: '40px', borderRadius: '28px', border: '1px solid rgba(255,255,255,0.08)' }}>
+        <div className="glass neon-glow-strong login-card" style={{ padding: '40px', borderRadius: '28px', border: '1px solid rgba(255,255,255,0.08)' }}>
           <div style={{ display: 'flex', gap: '24px', marginBottom: '32px', borderBottom: '1px solid var(--color-border)', paddingBottom: '12px' }}>
             <button onClick={() => setIsRegister(false)} style={{
               background: 'none', border: 'none', cursor: 'pointer', fontSize: '15px', fontWeight: '700',
               color: !isRegister ? 'var(--color-neon)' : 'var(--color-text-muted)', transition: 'all 0.3s ease',
-              position: 'relative', padding: '0 4px'
+              position: 'relative', padding: '0 4px',
+              WebkitTapHighlightColor: 'transparent',
             }}>
               Login
               {!isRegister && <div style={{ position: 'absolute', bottom: '-13px', left: 0, right: 0, height: '2px', background: 'var(--color-neon)', boxShadow: '0 0 10px var(--color-neon)' }} />}
@@ -119,7 +120,8 @@ export default function Login() {
             <button onClick={() => setIsRegister(true)} style={{
               background: 'none', border: 'none', cursor: 'pointer', fontSize: '15px', fontWeight: '700',
               color: isRegister ? 'var(--color-neon)' : 'var(--color-text-muted)', transition: 'all 0.3s ease',
-              position: 'relative', padding: '0 4px'
+              position: 'relative', padding: '0 4px',
+              WebkitTapHighlightColor: 'transparent',
             }}>
               Register
               {isRegister && <div style={{ position: 'absolute', bottom: '-13px', left: 0, right: 0, height: '2px', background: 'var(--color-neon)', boxShadow: '0 0 10px var(--color-neon)' }} />}
@@ -168,7 +170,7 @@ export default function Login() {
           </form>
 
           <div style={{ marginTop: '32px', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-            <Activity size={16} color="var(--color-neon)" />
+            <Activity size={16} color="var(--color-neon)" style={{ flexShrink: 0 }} />
             <span style={{ fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: '1.4' }}>
               System encrypts all biometric data and medical records using AES-256 standards.
             </span>

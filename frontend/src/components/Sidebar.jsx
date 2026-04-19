@@ -1,4 +1,4 @@
-import { Activity, LayoutDashboard, Users, Database, Upload, MessageSquare, FileText, ClipboardList, LogOut, ChevronLeft, ChevronRight, History } from 'lucide-react';
+import { Activity, LayoutDashboard, Users, Database, Upload, MessageSquare, FileText, ClipboardList, LogOut, ChevronLeft, ChevronRight, History, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const menuItems = [
@@ -11,11 +11,11 @@ const menuItems = [
   { id: 'notes', label: 'Doctor Notes', icon: ClipboardList },
 ];
 
-export default function Sidebar({ activePanel, setActivePanel, collapsed, setCollapsed }) {
+export default function Sidebar({ activePanel, setActivePanel, collapsed, setCollapsed, mobileOpen }) {
   const { doctor, logout } = useAuth();
 
   return (
-    <div className="glass" style={{
+    <div className={`glass sidebar-desktop ${mobileOpen ? 'mobile-open' : ''}`} style={{
       width: collapsed ? '72px' : '260px',
       minHeight: '100vh',
       display: 'flex',
@@ -28,6 +28,9 @@ export default function Sidebar({ activePanel, setActivePanel, collapsed, setCol
       borderBottom: 'none',
       position: 'relative',
       background: 'linear-gradient(180deg, rgba(10,17,40,0.95) 0%, rgba(6,11,24,0.98) 100%)',
+      flexShrink: 0,
+      overflowY: 'auto',
+      overflowX: 'hidden',
     }}>
       {/* Logo */}
       <div style={{ padding: collapsed ? '20px 12px' : '24px 20px', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -41,7 +44,7 @@ export default function Sidebar({ activePanel, setActivePanel, collapsed, setCol
           <Activity size={22} style={{ color: 'var(--color-neon)' }} />
         </div>
         {!collapsed && (
-          <div style={{ overflow: 'hidden' }}>
+          <div style={{ overflow: 'hidden', flex: 1 }}>
             <div style={{ fontWeight: '800', fontSize: '17px', letterSpacing: '-0.3px' }}>
               <span className="neon-text">MedAssist</span>{' '}
               <span style={{ color: 'var(--color-text-secondary)', fontWeight: '400' }}>AI</span>
@@ -53,8 +56,8 @@ export default function Sidebar({ activePanel, setActivePanel, collapsed, setCol
         )}
       </div>
 
-      {/* Toggle */}
-      <button onClick={() => setCollapsed(!collapsed)} style={{
+      {/* Toggle — hidden on mobile */}
+      <button className="sidebar-toggle-btn" onClick={() => setCollapsed(!collapsed)} style={{
         position: 'absolute', right: '-14px', top: '72px', width: '28px', height: '28px', borderRadius: '50%',
         background: 'var(--color-bg-secondary)', border: '1px solid var(--color-border)', color: 'var(--color-text-secondary)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10,
@@ -104,6 +107,7 @@ export default function Sidebar({ activePanel, setActivePanel, collapsed, setCol
               width: '100%',
               position: 'relative',
               overflow: 'hidden',
+              WebkitTapHighlightColor: 'transparent',
             }}
             onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(0,245,212,0.05)'; e.currentTarget.style.color = 'var(--color-text-primary)'; }}}
             onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--color-text-secondary)'; }}}>
@@ -124,6 +128,7 @@ export default function Sidebar({ activePanel, setActivePanel, collapsed, setCol
           borderRadius: '12px', border: 'none', cursor: 'pointer',
           background: 'transparent', color: 'var(--color-danger)',
           fontSize: '14px', width: '100%', transition: 'all 0.25s ease',
+          WebkitTapHighlightColor: 'transparent',
         }}
         onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,107,107,0.08)'}
         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>

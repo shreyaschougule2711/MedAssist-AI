@@ -3,7 +3,8 @@ import api from '../api/client';
 import { useToast } from './Toast';
 import { 
   CloudUpload, FileImage, Cpu, CheckCircle, AlertTriangle, 
-  Loader2, Maximize2, ShieldCheck, Activity, Brain, History 
+  Loader2, Maximize2, ShieldCheck, Activity, Brain, History,
+  Target, MapPin
 } from 'lucide-react';
 
 function ScanningAnimation() {
@@ -80,9 +81,11 @@ export default function ScanUpload({ selectedPatient, onScanComplete }) {
     }
   };
 
+  const analysisResult = result?.analysis_result || {};
+
   return (
     <div className="animate-fadeIn">
-      <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
             <Cpu size={14} style={{ color: 'var(--color-neon)' }} />
@@ -99,19 +102,18 @@ export default function ScanUpload({ selectedPatient, onScanComplete }) {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: result ? '1fr' : '1fr 1fr', gap: '24px' }}>
+      <div className="scan-upload-grid" style={{ display: 'grid', gridTemplateColumns: result ? '1fr' : '1fr 1fr', gap: '24px' }}>
         {!result && (
-          <div className="glass neon-glow" style={{ padding: '32px', borderRadius: '24px', display: 'flex', flexDirection: 'column', gap: '24px', transition: 'all 0.3s ease' }}
-          onMouseEnter={e => e.currentTarget.style.boxShadow = "0 0 30px 30px rgba(46,230,201,0.3), 0 8px 32px rgba(0,0,0,0.3)"}
-          onMouseLeave={e => e.currentTarget.style.boxShadow = ""}>
-            <div style={{ display: 'flex', gap: '12px' }}>
+          <div className="glass neon-glow" style={{ padding: '32px', borderRadius: '24px', display: 'flex', flexDirection: 'column', gap: '24px', transition: 'all 0.3s ease' }}>
+            <div className="scan-type-btns" style={{ display: 'flex', gap: '12px' }}>
               {['MRI', 'CT', 'X-RAY', 'ULTRASOUND'].map(t => (
                 <button key={t} onClick={() => setScanType(t)} style={{
-                  flex: 1, padding: '12px', borderRadius: '14px', border: 'none', cursor: 'pointer',
+                  flex: 1, padding: '12px', borderRadius: '14px', cursor: 'pointer',
                   background: scanType === t ? 'rgba(0,245,212,0.15)' : 'rgba(255,255,255,0.03)',
                   border: `1px solid ${scanType === t ? 'rgba(0,245,212,0.5)' : 'var(--color-border)'}`,
                   color: scanType === t ? 'var(--color-neon)' : 'var(--color-text-secondary)',
                   fontWeight: '700', fontSize: '12px', transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                  WebkitTapHighlightColor: 'transparent',
                 }}>
                   {t}
                 </button>
@@ -121,19 +123,19 @@ export default function ScanUpload({ selectedPatient, onScanComplete }) {
             <label style={{ 
               flex: 1, border: '2px dashed var(--color-border)', borderRadius: '20px', 
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
-              cursor: 'pointer', transition: 'all 0.3s ease', padding: '40px',
-              background: 'rgba(255,255,255,0.01)'
+              cursor: 'pointer', transition: 'all 0.3s ease', padding: '40px 20px',
+              background: 'rgba(255,255,255,0.01)', minHeight: '200px',
             }} onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-neon)'; e.currentTarget.style.background = 'rgba(0,245,212,0.03)'; }}>
               <input type="file" hidden onChange={handleFileChange} accept="image/*" />
               {preview ? (
-                <img src={preview} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
+                <img src={preview} style={{ width: '100%', maxHeight: '300px', objectFit: 'contain', borderRadius: '12px' }} />
               ) : (
                 <>
                   <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(0,245,212,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
                     <CloudUpload size={32} color="var(--color-neon)" />
                   </div>
-                  <p style={{ fontWeight: '700', fontSize: '16px', marginBottom: '4px' }}>Drop medical scan here</p>
-                  <p style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>Support for DICOM, PNG, JPG (max 20MB)</p>
+                  <p style={{ fontWeight: '700', fontSize: '16px', marginBottom: '4px', textAlign: 'center' }}>Drop medical scan here</p>
+                  <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', textAlign: 'center' }}>Support for DICOM, PNG, JPG (max 20MB)</p>
                 </>
               )}
             </label>
@@ -150,9 +152,7 @@ export default function ScanUpload({ selectedPatient, onScanComplete }) {
 
         {!uploading && !result && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div className="glass" style={{ padding: '24px', borderRadius: '20px', transition: 'all 0.3s ease' }}
-            onMouseEnter={e => e.currentTarget.style.boxShadow = "0 0 30px 30px rgba(46,230,201,0.3), 0 8px 32px rgba(0,0,0,0.3)"}
-            onMouseLeave={e => e.currentTarget.style.boxShadow = ""}>
+            <div className="glass" style={{ padding: '24px', borderRadius: '20px', transition: 'all 0.3s ease' }}>
               <h3 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-neon)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1px' }}>Vision AI Model</h3>
               <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: '1.6' }}>
                 Our proprietary MedVision™ 4.0 model leverages advanced convolutional neural networks transformer blocks to identify 40+ medical abnormalities with 94.2% historical accuracy.
@@ -162,43 +162,71 @@ export default function ScanUpload({ selectedPatient, onScanComplete }) {
         )}
 
         {result && (
-          <div className="animate-scale-in" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+          <div className="animate-scale-in scan-result-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+            {/* Annotated Image */}
             <div className="glass neon-glow-strong" style={{ padding: '24px', borderRadius: '24px', position: 'relative' }}>
-              <div style={{ position: 'absolute', top: '16px', right: '16px', padding: '4px 12px', borderRadius: '8px', background: 'rgba(0,0,0,0.6)', border: '1px solid var(--color-neon)', fontSize: '10px', color: 'var(--color-neon)', fontWeight: '800' }}>AI ANNOTATED VIEW</div>
+              <div style={{ position: 'absolute', top: '16px', right: '16px', padding: '4px 12px', borderRadius: '8px', background: 'rgba(0,0,0,0.6)', border: '1px solid var(--color-neon)', fontSize: '10px', color: 'var(--color-neon)', fontWeight: '800', zIndex: 2 }}>AI ANNOTATED VIEW</div>
               <img src={`/api/scans/${result.id}/annotated`} style={{ width: '100%', borderRadius: '14px', border: '1px solid var(--color-border)' }} />
-              <div style={{ marginTop: '20px', display: 'flex', gap: '12px' }}>
-                <div style={{ flex: 1, padding: '12px', background: 'rgba(255,107,107,0.05)', borderRadius: '12px', border: '1px solid rgba(255,107,107,0.2)' }}>
-                  <div style={{ fontSize: '10px', color: 'var(--color-danger)', fontWeight: '700', marginBottom: '4px' }}>DETECTED REGION</div>
-                  <div style={{ fontSize: '13px', fontWeight: '600' }}>{result.analysis_result.area}</div>
+              
+              {/* Fracture region info cards */}
+              <div style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div style={{ padding: '12px', background: 'rgba(255,107,107,0.05)', borderRadius: '12px', border: '1px solid rgba(255,107,107,0.2)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                    <Target size={12} color="var(--color-danger)" />
+                    <span style={{ fontSize: '10px', color: 'var(--color-danger)', fontWeight: '700' }}>FRACTURE REGION</span>
+                  </div>
+                  <div style={{ fontSize: '13px', fontWeight: '600' }}>{analysisResult.area || 'N/A'}</div>
                 </div>
-                <div style={{ flex: 1, padding: '12px', background: 'rgba(0,245,212,0.05)', borderRadius: '12px', border: '1px solid rgba(0,245,212,0.2)' }}>
-                  <div style={{ fontSize: '10px', color: 'var(--color-neon)', fontWeight: '700', marginBottom: '4px' }}>CONFIDENCE SCORE</div>
-                  <div style={{ fontSize: '13px', fontWeight: '600' }}>{(result.analysis_result.confidence * 100).toFixed(1)}% Match</div>
+                <div style={{ padding: '12px', background: 'rgba(0,245,212,0.05)', borderRadius: '12px', border: '1px solid rgba(0,245,212,0.2)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                    <Activity size={12} color="var(--color-neon)" />
+                    <span style={{ fontSize: '10px', color: 'var(--color-neon)', fontWeight: '700' }}>CONFIDENCE</span>
+                  </div>
+                  <div style={{ fontSize: '13px', fontWeight: '600' }}>{((analysisResult.confidence || 0) * 100).toFixed(1)}% Match</div>
                 </div>
               </div>
+
+              {/* Fracture type badge */}
+              {analysisResult.fracture_type && analysisResult.fracture_type !== 'None' && analysisResult.fracture_type !== 'Undetermined' && (
+                <div style={{ marginTop: '12px', padding: '10px 14px', background: 'rgba(123,97,255,0.08)', borderRadius: '12px', border: '1px solid rgba(123,97,255,0.2)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <MapPin size={14} color="var(--color-purple)" />
+                  <div>
+                    <div style={{ fontSize: '10px', color: 'var(--color-purple)', fontWeight: '700', textTransform: 'uppercase' }}>Fracture Type</div>
+                    <div style={{ fontSize: '13px', fontWeight: '600' }}>{analysisResult.fracture_type}</div>
+                  </div>
+                </div>
+              )}
             </div>
             
+            {/* Analysis details */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div className="glass" style={{ padding: '24px', borderRadius: '24px', transition: 'all 0.3s ease' }}
-              onMouseEnter={e => e.currentTarget.style.boxShadow = "0 0 30px 30px rgba(46,230,201,0.3), 0 8px 32px rgba(0,0,0,0.3)"}
-              onMouseLeave={e => e.currentTarget.style.boxShadow = ""}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <div className="glass" style={{ padding: '24px', borderRadius: '24px', transition: 'all 0.3s ease' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
                   <h3 style={{ fontSize: '18px', fontWeight: '800' }}>Analysis Result</h3>
-                  <span className={`badge ${result.analysis_result.severity === 'High' ? 'badge-high' : result.analysis_result.severity === 'Moderate' ? 'badge-moderate' : 'badge-low'}`} style={{ padding: '6px 14px', fontSize: '12px' }}>{result.analysis_result.severity} Risk</span>
+                  <span className={`badge ${analysisResult.severity === 'High' ? 'badge-high' : analysisResult.severity === 'Moderate' ? 'badge-moderate' : 'badge-low'}`} style={{ padding: '6px 14px', fontSize: '12px' }}>{analysisResult.severity} Risk</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '16px', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', marginBottom: '20px' }}>
                   <CheckCircle size={20} color="var(--color-neon)" />
                   <div>
                     <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>Diagnosis Code Suggestion</div>
-                    <div style={{ fontSize: '15px', fontWeight: '700' }}>{result.analysis_result.condition}</div>
+                    <div style={{ fontSize: '15px', fontWeight: '700' }}>{analysisResult.condition}</div>
                   </div>
                 </div>
+
+                {/* Fracture location description */}
+                {analysisResult.fracture_location_description && (
+                  <div style={{ marginBottom: '20px', padding: '12px 16px', background: 'rgba(255,200,50,0.05)', borderRadius: '12px', border: '1px solid rgba(255,200,50,0.15)' }}>
+                    <div style={{ fontSize: '10px', color: 'var(--color-warning)', fontWeight: '700', textTransform: 'uppercase', marginBottom: '4px' }}>📍 Location</div>
+                    <div style={{ fontSize: '13px', lineHeight: '1.5', color: 'var(--color-text-secondary)' }}>{analysisResult.fracture_location_description}</div>
+                  </div>
+                )}
+
                 <div style={{ marginBottom: '20px' }}>
                   <h4 style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-text-muted)', marginBottom: '8px', textTransform: 'uppercase' }}>Visual Findings</h4>
-                  <p style={{ fontSize: '14px', lineHeight: '1.6' }}>{result.analysis_result.findings}</p>
+                  <p style={{ fontSize: '14px', lineHeight: '1.6' }}>{analysisResult.findings}</p>
                 </div>
-                <div style={{ display: 'flex', gap: '12px' }}>
-                  <button onClick={() => setResult(null)} className="glass" style={{ flex: 1, border: '1px solid var(--color-border)', cursor: 'pointer', padding: '12px', borderRadius: '14px', fontWeight: '600', fontSize: '13px' }}>Analyze New Scan</button>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                  <button onClick={() => { setResult(null); setFile(null); setPreview(null); }} className="glass" style={{ flex: 1, border: '1px solid var(--color-border)', cursor: 'pointer', padding: '12px', borderRadius: '14px', fontWeight: '600', fontSize: '13px', minWidth: '140px', WebkitTapHighlightColor: 'transparent' }}>Analyze New Scan</button>
                 </div>
               </div>
             </div>

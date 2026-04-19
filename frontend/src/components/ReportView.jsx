@@ -63,10 +63,11 @@ export default function ReportView({ selectedPatient }) {
     if (!w) return;
     w.document.write(`
       <html><head><title>MedAssist AI Report - ${selectedPatient?.name}</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
       <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 40px; color: #1e293b; max-width: 800px; margin: 0 auto; line-height: 1.6; }
-        .header { border-bottom: 2px solid #0f172a; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .title { color: #0f172a; margin: 0 0 10px 0; font-size: 28px; font-weight: 800; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; color: #1e293b; max-width: 800px; margin: 0 auto; line-height: 1.6; }
+        .header { border-bottom: 2px solid #0f172a; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; }
+        .title { color: #0f172a; margin: 0 0 10px 0; font-size: 24px; font-weight: 800; }
         .subtitle { color: #64748b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
         .meta-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px; margin-bottom: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .meta-item { font-size: 14px; }
@@ -75,6 +76,7 @@ export default function ReportView({ selectedPatient }) {
         .section { margin: 16px 0; padding: 0 8px; }
         .disclaimer { margin-top: 40px; padding: 16px; background: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; font-size: 12px; color: #92400e; font-weight: 500; }
         .footer { margin-top: 40px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 20px; }
+        @media (max-width: 600px) { .meta-box { grid-template-columns: 1fr; } .title { font-size: 20px; } body { padding: 12px; } }
       </style>
       </head><body>
         <div class="header">
@@ -125,7 +127,7 @@ export default function ReportView({ selectedPatient }) {
 
   return (
     <div className="animate-fadeIn">
-      <div style={{ marginBottom: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+      <div style={{ marginBottom: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
             <Zap size={14} style={{ color: 'var(--color-neon)' }} />
@@ -139,14 +141,14 @@ export default function ReportView({ selectedPatient }) {
         <div style={{ display: 'flex', gap: '12px' }}>
           <div className="glass" style={{ padding: '8px 16px', borderRadius: '12px', display: 'flex', gap: '8px', alignItems: 'center' }}>
             <ShieldCheck size={16} color="var(--color-neon)" />
-            <span style={{ fontSize: '12px', fontWeight: '600' }}>Validated Reports: {reports.length}</span>
+            <span style={{ fontSize: '12px', fontWeight: '600' }}>Reports: {reports.length}</span>
           </div>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '24px' }}>
+      <div className="report-main-grid" style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '24px' }}>
         {/* Sidebar */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="report-sidebar" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {unreportedScans.length > 0 && (
             <div>
               <h4 style={{ fontSize: '11px', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px', fontWeight: '700' }}>Pending Analysis</h4>
@@ -157,6 +159,7 @@ export default function ReportView({ selectedPatient }) {
                     background: selectedScanForGen?.id === s.id ? 'rgba(0,180,216,0.1)' : 'rgba(255,255,255,0.02)',
                     border: `1px solid ${selectedScanForGen?.id === s.id ? 'var(--color-cyan)' : 'rgba(255,255,255,0.08)'}`,
                     color: 'var(--color-text-primary)', transition: 'all 0.2s ease',
+                    width: '100%', minWidth: '200px',
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <Brain size={16} style={{ color: 'var(--color-cyan)' }} />
@@ -186,6 +189,7 @@ export default function ReportView({ selectedPatient }) {
                     background: activeReport?.id === r.id ? 'rgba(0,245,212,0.1)' : 'var(--color-bg-card)',
                     border: `1px solid ${activeReport?.id === r.id ? 'rgba(0,245,212,0.3)' : 'var(--color-border)'}`,
                     color: 'var(--color-text-primary)', transition: 'all 0.2s ease',
+                    width: '100%', minWidth: '200px',
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div>
@@ -202,7 +206,7 @@ export default function ReportView({ selectedPatient }) {
         </div>
 
         {/* Content Area */}
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', minWidth: 0 }}>
           {generating && (
             <div className="glass neon-glow-strong animate-fadeIn" style={{ 
               position: 'absolute', inset: 0, zIndex: 100, display: 'flex', 
@@ -213,41 +217,41 @@ export default function ReportView({ selectedPatient }) {
                 <div style={{ width: '80px', height: '80px', borderRadius: '50%', border: '4px solid rgba(0,245,212,0.1)', borderTopColor: 'var(--color-neon)', animation: 'spin-slow 1s linear infinite' }} />
                 <Brain size={32} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: 'var(--color-neon)' }} />
               </div>
-              <h3 className="neon-text" style={{ fontSize: '20px', fontWeight: '800', marginBottom: '8px' }}>Generating Neural Insights</h3>
-              <p style={{ fontSize: '14px', color: 'var(--color-text-muted)', letterSpacing: '1px', textTransform: 'uppercase' }}>Analyzing scan patterns with Medical-LLM...</p>
+              <h3 className="neon-text" style={{ fontSize: '20px', fontWeight: '800', marginBottom: '8px', textAlign: 'center' }}>Generating Neural Insights</h3>
+              <p style={{ fontSize: '14px', color: 'var(--color-text-muted)', letterSpacing: '1px', textTransform: 'uppercase', textAlign: 'center' }}>Analyzing scan patterns with Medical-LLM...</p>
             </div>
           )}
 
           {activeReport ? (
             <div className="glass animate-scale-in" style={{ padding: '32px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px', paddingBottom: '24px', borderBottom: '1px solid var(--color-border)' }}>
+              <div className="report-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px', paddingBottom: '24px', borderBottom: '1px solid var(--color-border)' }}>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px', flexWrap: 'wrap' }}>
                     <span className={`badge ${activeReport.severity === 'High' ? 'badge-high' : activeReport.severity === 'Moderate' ? 'badge-moderate' : 'badge-low'}`} style={{ padding: '4px 12px', fontSize: '11px' }}>
                       {activeReport.severity} Risk Case
                     </span>
                     <span style={{ fontSize: '11px', color: 'var(--color-text-muted)', fontWeight: '600' }}>AI Confidence: {(activeReport.confidence * 100).toFixed(0)}%</span>
                   </div>
-                  <h3 style={{ fontSize: '26px', fontWeight: '800', border: 'none' }}>Diagnostic Medical Report</h3>
+                  <h3 style={{ fontSize: '22px', fontWeight: '800', border: 'none' }}>Diagnostic Medical Report</h3>
                   <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', marginTop: '4px' }}>Generated: {new Date(activeReport.created_at).toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                 </div>
                 <button className="btn-primary" onClick={handlePrint} style={{ 
                   padding: '12px 20px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px',
-                  boxShadow: '0 0 20px rgba(0,245,212,0.2)'
+                  boxShadow: '0 0 20px rgba(0,245,212,0.2)', whiteSpace: 'nowrap',
                 }}>
                   <Printer size={18} />
-                  Print Official Copy
+                  <span>Print</span>
                 </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '32px' }}>
+              <div className="report-content-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '32px' }}>
                 <div style={{ padding: '20px', borderRadius: '18px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
                   <h4 style={{ fontSize: '11px', color: 'var(--color-text-muted)', textTransform: 'uppercase', marginBottom: '12px', fontWeight: '700' }}>Clinical Findings</h4>
-                  <p style={{ fontSize: '14px', lineHeight: '1.6', color: 'var(--color-text-primary)' }}>{activeReport.findings}</p>
+                  <p style={{ fontSize: '14px', lineHeight: '1.6', color: 'var(--color-text-primary)', wordBreak: 'break-word' }}>{activeReport.findings}</p>
                 </div>
                 <div style={{ padding: '20px', borderRadius: '18px', background: 'rgba(0,245,212,0.03)', border: '1px solid rgba(0,245,212,0.1)' }}>
                   <h4 style={{ fontSize: '11px', color: 'var(--color-neon)', textTransform: 'uppercase', marginBottom: '12px', fontWeight: '700' }}>Primary Diagnosis</h4>
-                  <p style={{ fontSize: '15px', fontWeight: '700', lineHeight: '1.6', color: 'var(--color-text-primary)' }}>{activeReport.diagnosis}</p>
+                  <p style={{ fontSize: '15px', fontWeight: '700', lineHeight: '1.6', color: 'var(--color-text-primary)', wordBreak: 'break-word' }}>{activeReport.diagnosis}</p>
                 </div>
               </div>
 
@@ -255,7 +259,7 @@ export default function ReportView({ selectedPatient }) {
                 <h4 style={{ fontSize: '11px', color: 'var(--color-purple)', textTransform: 'uppercase', marginBottom: '16px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Activity size={14} /> Affected Region & Severity
                 </h4>
-                <div style={{ fontSize: '14px', lineHeight: '1.6', color: 'var(--color-text-secondary)', padding: '20px', borderRadius: '18px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--color-border)' }}>
+                <div style={{ fontSize: '14px', lineHeight: '1.6', color: 'var(--color-text-secondary)', padding: '20px', borderRadius: '18px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--color-border)', wordBreak: 'break-word' }}>
                   {activeReport.affected_area}
                 </div>
               </div>
@@ -264,20 +268,20 @@ export default function ReportView({ selectedPatient }) {
                 <h4 style={{ fontSize: '11px', color: 'var(--color-cyan)', textTransform: 'uppercase', marginBottom: '16px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <CheckCircle size={14} /> AI Recommendations & Plan
                 </h4>
-                <div style={{ fontSize: '14px', lineHeight: '1.7', color: 'var(--color-text-primary)', padding: '24px', borderRadius: '18px', background: 'rgba(0,180,216,0.03)', border: '1px solid rgba(0,180,216,0.1)', whiteSpace: 'pre-line' }}>
+                <div style={{ fontSize: '14px', lineHeight: '1.7', color: 'var(--color-text-primary)', padding: '24px', borderRadius: '18px', background: 'rgba(0,180,216,0.03)', border: '1px solid rgba(0,180,216,0.1)', whiteSpace: 'pre-line', wordBreak: 'break-word' }}>
                   {activeReport.advice}
                 </div>
               </div>
 
               <div style={{ marginTop: '32px', padding: '16px', borderRadius: '14px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--color-border)', display: 'flex', gap: '12px', alignItems: 'center' }}>
-                <Clock size={16} style={{ color: 'var(--color-text-muted)' }} />
+                <Clock size={16} style={{ color: 'var(--color-text-muted)', flexShrink: 0 }} />
                 <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: '1.5' }}>
                   This report was autonomously generated by MedAssist Neural Network. It is intended for healthcare professionals only.
                 </p>
               </div>
             </div>
           ) : selectedScanForGen ? (
-            <div className="glass animate-fadeIn" style={{ padding: '60px 40px', borderRadius: '24px', textAlign: 'center' }}>
+            <div className="glass animate-fadeIn" style={{ padding: '40px 24px', borderRadius: '24px', textAlign: 'center' }}>
               <div style={{ 
                 width: '100px', height: '100px', borderRadius: '50%', background: 'rgba(0,180,216,0.05)', 
                 display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px',
@@ -292,14 +296,14 @@ export default function ReportView({ selectedPatient }) {
               <p style={{ fontSize: '15px', color: 'var(--color-text-muted)', maxWidth: '400px', margin: '0 auto 24px', lineHeight: '1.6' }}>
                 A {selectedScanForGen.scan_type} scan is available for <strong style={{color:'var(--color-text-secondary)'}}>{selectedPatient.name}</strong>. Generate an AI diagnostic report now.
               </p>
-              <button className="btn-primary" onClick={() => generateReport(selectedScanForGen.id)} style={{ padding: '16px 32px', borderRadius: '16px', fontSize: '16px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '12px', margin: '0 auto' }}>
+              <button className="btn-primary" onClick={() => generateReport(selectedScanForGen.id)} style={{ padding: '16px 32px', borderRadius: '16px', fontSize: '16px', fontWeight: '700', display: 'inline-flex', alignItems: 'center', gap: '12px' }}>
                 <Sparkles size={20} />
                 Generate AI Clinical Report
                 <ArrowRight size={20} />
               </button>
             </div>
           ) : (
-            <div style={{ padding: '100px 40px', textAlign: 'center', color: 'var(--color-text-muted)' }}>
+            <div style={{ padding: '80px 20px', textAlign: 'center', color: 'var(--color-text-muted)' }}>
               <History size={48} style={{ opacity: 0.2, marginBottom: '16px' }} />
               <p>No scans available for report generation.</p>
               <p style={{ fontSize: '12px', marginTop: '8px' }}>Upload a new scan to start the diagnostic process.</p>
@@ -308,4 +312,5 @@ export default function ReportView({ selectedPatient }) {
         </div>
       </div>
     </div>
-);}
+ );
+}

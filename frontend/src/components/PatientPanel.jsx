@@ -47,7 +47,7 @@ export default function PatientPanel({ selectedPatient, setSelectedPatient, onVi
 
   return (
     <div className="animate-fadeIn">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '24px' }}>
+      <div className="patient-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
             <Users size={14} style={{ color: 'var(--color-neon)' }} />
@@ -66,7 +66,7 @@ export default function PatientPanel({ selectedPatient, setSelectedPatient, onVi
       {showAddForm && (
         <div className="glass neon-glow animate-slideUp" style={{ padding: '24px', marginBottom: '24px', borderRadius: '16px' }}>
           <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '16px', color: 'var(--color-text-primary)' }}>New Patient Registration</h3>
-          <form onSubmit={handleAddPatient} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr auto', gap: '16px', alignItems: 'end' }}>
+          <form onSubmit={handleAddPatient} className="patient-form-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr auto', gap: '16px', alignItems: 'end' }}>
             <div>
               <label style={{ fontSize: '11px', color: 'var(--color-text-secondary)', marginBottom: '8px', display: 'block', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '600' }}>Full Name</label>
               <input className="input-field" placeholder="Patient Name" value={newPatient.name} onChange={e => setNewPatient({...newPatient, name: e.target.value})} required />
@@ -105,31 +105,30 @@ export default function PatientPanel({ selectedPatient, setSelectedPatient, onVi
             <p>No patients found</p>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1px', background: 'var(--color-border)' }}>
+          <div className="patient-cards-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1px', background: 'var(--color-border)' }}>
             {filteredPatients.map(p => (
               <div key={p.id} onClick={() => { setSelectedPatient(p); onViewPatient(p); }} style={{
                 padding: '24px', background: 'var(--color-bg-card)', cursor: 'pointer',
                 transition: 'all 0.3s ease', display: 'flex', alignItems: 'center', gap: '16px',
+                WebkitTapHighlightColor: 'transparent',
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.background = 'rgba(0,245,212,0.03)';
-                e.currentTarget.style.boxShadow = "inset 0 0 30px 30px rgba(46,230,201,0.05), 0 0 30px 30px rgba(46,230,201,0.3)";
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.background = 'var(--color-bg-card)';
-                e.currentTarget.style.boxShadow = '';
               }}>
                 <div style={{
                   width: '48px', height: '48px', borderRadius: '12px',
                   background: 'linear-gradient(135deg, rgba(0,245,212,0.1), rgba(0,180,216,0.05))',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '18px', fontWeight: '800', color: 'var(--color-neon)',
+                  fontSize: '18px', fontWeight: '800', color: 'var(--color-neon)', flexShrink: 0,
                 }}>{p.name.charAt(0)}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '15px', fontWeight: '700', color: 'var(--color-text-primary)' }}>{p.name}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: '15px', fontWeight: '700', color: 'var(--color-text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</div>
                   <div style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>ID: #{p.id} · {p.age}y · {p.gender}</div>
                 </div>
-                <ArrowRight size={16} style={{ color: 'var(--color-text-muted)', opacity: 0.5 }} />
+                <ArrowRight size={16} style={{ color: 'var(--color-text-muted)', opacity: 0.5, flexShrink: 0 }} />
               </div>
             ))}
           </div>

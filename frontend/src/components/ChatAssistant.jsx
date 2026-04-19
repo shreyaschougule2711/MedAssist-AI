@@ -80,8 +80,8 @@ export default function ChatAssistant({ selectedPatient }) {
   ];
 
   return (
-    <div className="animate-fadeIn" style={{ height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className="animate-fadeIn chat-container" style={{ height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
             <Sparkles size={14} style={{ color: 'var(--color-neon)' }} />
@@ -91,10 +91,8 @@ export default function ChatAssistant({ selectedPatient }) {
         </div>
       </div>
 
-      <div className="glass" style={{ flex: 1, display: 'flex', flexDirection: 'column', borderRadius: '24px', overflow: 'hidden', transition: 'all 0.3s ease' }}
-      onMouseEnter={e => e.currentTarget.style.boxShadow = "0 0 30px 30px rgba(46,230,201,0.3), 0 8px 32px rgba(0,0,0,0.3)"}
-      onMouseLeave={e => e.currentTarget.style.boxShadow = ""}>
-        <div style={{ flex: 1, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div className="glass" style={{ flex: 1, display: 'flex', flexDirection: 'column', borderRadius: '24px', overflow: 'hidden', transition: 'all 0.3s ease', minHeight: 0 }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px', WebkitOverflowScrolling: 'touch' }}>
           {messages.length === 0 && (
             <div style={{ textAlign: 'center', marginTop: '40px', opacity: 0.5 }}>
               <div style={{ width: '64px', height: '64px', borderRadius: '20px', background: 'rgba(0,245,212,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
@@ -108,6 +106,7 @@ export default function ChatAssistant({ selectedPatient }) {
                     padding: '8px 16px', borderRadius: '12px', background: 'rgba(0,245,212,0.05)',
                     border: '1px solid rgba(0,245,212,0.15)', color: 'var(--color-neon)',
                     fontSize: '12px', cursor: 'pointer', transition: 'all 0.2s',
+                    WebkitTapHighlightColor: 'transparent',
                   }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,245,212,0.1)'} 
                      onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,245,212,0.05)'}>
                     {action}
@@ -127,14 +126,14 @@ export default function ChatAssistant({ selectedPatient }) {
                   <Bot size={16} color="#060b18" />
                 </div>
               )}
-              <div className="glass" style={{
+              <div className="glass chat-message-bubble" style={{
                 maxWidth: '80%', padding: '12px 18px', borderRadius: '18px',
                 borderBottomRightRadius: msg.role === 'user' ? '4px' : '18px',
                 borderTopLeftRadius: msg.role !== 'user' ? '4px' : '18px',
                 background: msg.role === 'user' ? 'rgba(0,245,212,0.08)' : 'rgba(255,255,255,0.03)',
                 border: `1px solid ${msg.role === 'user' ? 'rgba(0,245,212,0.2)' : 'var(--color-border)'}`,
               }}>
-                <div className="markdown-content" style={{ fontSize: '14px', color: 'var(--color-text-primary)' }}>
+                <div className="markdown-content" style={{ fontSize: '14px', color: 'var(--color-text-primary)', wordBreak: 'break-word' }}>
                   <ReactMarkdown>{msg.content}</ReactMarkdown>
                 </div>
               </div>
@@ -143,14 +142,12 @@ export default function ChatAssistant({ selectedPatient }) {
           {loading && <TypingIndicator />}
           <div ref={bottomRef} />
         </div>
-        <div style={{ padding: '24px', borderTop: '1px solid var(--color-border)', background: 'rgba(0,0,0,0.2)' }}>
-          <form onClick={(e) => e.stopPropagation()} onSubmit={handleSend} style={{ display: 'flex', gap: '12px', position: 'relative' }}>
-            <input className="input-field" placeholder="Ask for clinical insights..." value={input} onChange={e => setInput(e.target.value)} disabled={loading} style={{ borderRadius: '16px', paddingRight: '120px', height: '54px' }} />
-            <div style={{ position: 'absolute', right: '6px', top: '7px' }}>
-              <button type="submit" className="btn-primary" disabled={loading || !input.trim()} style={{ padding: '10px 24px', borderRadius: '12px', height: '40px' }}>
-                {loading ? <Loader2 size={18} className="animate-spin-slow" /> : <Send size={16} />}
-              </button>
-            </div>
+        <div className="chat-input-area" style={{ padding: '24px', borderTop: '1px solid var(--color-border)', background: 'rgba(0,0,0,0.2)' }}>
+          <form onClick={(e) => e.stopPropagation()} onSubmit={handleSend} style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <input className="input-field" placeholder="Ask for clinical insights..." value={input} onChange={e => setInput(e.target.value)} disabled={loading} style={{ borderRadius: '16px', height: '54px', flex: 1 }} />
+            <button type="submit" className="btn-primary" disabled={loading || !input.trim()} style={{ padding: '14px 20px', borderRadius: '14px', height: '54px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {loading ? <Loader2 size={18} className="animate-spin-slow" /> : <Send size={18} />}
+            </button>
           </form>
         </div>
       </div>

@@ -29,14 +29,14 @@ function AnimatedCounter({ end, duration = 1200, prefix = '', suffix = '' }) {
 
 function StatCard({ icon: Icon, label, value, color, delay, gradient }) {
   return (
-    <div className="glass neon-glow animate-fadeIn" style={{
+    <div className="glass neon-glow animate-fadeIn stat-card" style={{
       padding: '24px', position: 'relative', overflow: 'hidden',
       animationDelay: delay, cursor: 'default',
       transition: 'all 0.3s ease', borderRadius: '20px',
     }}
     onMouseEnter={e => {
       e.currentTarget.style.transform = 'translateY(-4px)';
-      e.currentTarget.style.boxShadow = "0 0 30px 30px rgba(46,230,201,0.3), 0 8px 32px rgba(0,0,0,0.3)";
+      e.currentTarget.style.boxShadow = "0 0 30px rgba(46,230,201,0.15), 0 8px 32px rgba(0,0,0,0.3)";
     }}
     onMouseLeave={e => {
       e.currentTarget.style.transform = 'none';
@@ -54,7 +54,7 @@ function StatCard({ icon: Icon, label, value, color, delay, gradient }) {
         </div>
         <TrendingUp size={16} style={{ color: color, opacity: 0.5 }} />
       </div>
-      <div style={{ fontSize: '32px', fontWeight: '800', color, lineHeight: '1', marginBottom: '6px', fontFamily: "'Inter', sans-serif" }}>
+      <div className="stat-value" style={{ fontSize: '32px', fontWeight: '800', color, lineHeight: '1', marginBottom: '6px', fontFamily: "'Inter', sans-serif" }}>
         <AnimatedCounter end={value} />
       </div>
       <div style={{ fontSize: '13px', color: 'var(--color-text-muted)', fontWeight: '500', letterSpacing: '0.5px' }}>{label}</div>
@@ -69,7 +69,7 @@ function SeverityRing({ high, moderate, low }) {
   const circumference = 2 * Math.PI * 45;
   
   return (
-    <div style={{ position: 'relative', width: '120px', height: '120px' }}>
+    <div style={{ position: 'relative', width: '120px', height: '120px', flexShrink: 0 }}>
       <svg viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
         <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
         <circle cx="50" cy="50" r="45" fill="none" stroke="#ff6b6b" strokeWidth="8"
@@ -171,7 +171,7 @@ export default function DashboardOverview({ onNavigate, onSelectPatient }) {
   return (
     <div className="animate-fadeIn">
       {/* Welcome Header */}
-      <div style={{ marginBottom: '32px', position: 'relative' }}>
+      <div className="dashboard-welcome" style={{ marginBottom: '32px', position: 'relative' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
           <Sparkles size={14} style={{ color: 'var(--color-neon)' }} />
           <span style={{ fontSize: '12px', color: 'var(--color-neon)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '2px' }}>Dashboard Overview</span>
@@ -186,7 +186,7 @@ export default function DashboardOverview({ onNavigate, onSelectPatient }) {
       </div>
 
       {/* Stats Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '28px' }}>
+      <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '28px' }}>
         <StatCard icon={Users} label="Total Patients" value={stats?.total_patients || 0} color="#00f5d4" delay="0s" />
         <StatCard icon={Scan} label="Scans Analyzed" value={stats?.total_scans || 0} color="#00b4d8" delay="0.1s" />
         <StatCard icon={FileText} label="Reports Generated" value={stats?.total_reports || 0} color="#7b61ff" delay="0.2s" />
@@ -194,7 +194,7 @@ export default function DashboardOverview({ onNavigate, onSelectPatient }) {
       </div>
 
       {/* Bottom Section */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '20px' }}>
+      <div className="dashboard-bottom-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '20px' }}>
         {/* Recent Activity */}
         <div className="glass" style={{ padding: '24px', borderRadius: '20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
@@ -220,14 +220,14 @@ export default function DashboardOverview({ onNavigate, onSelectPatient }) {
         </div>
 
         {/* Right Column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div className="dashboard-right-col" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Severity Distribution */}
           <div className="glass" style={{ padding: '24px', borderRadius: '20px' }}>
             <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Shield size={18} style={{ color: 'var(--color-warning)' }} />
               Case Severity
             </h3>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '24px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '24px', flexWrap: 'wrap' }}>
               <SeverityRing high={sev.high} moderate={sev.moderate} low={sev.low} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 {[
@@ -263,18 +263,17 @@ export default function DashboardOverview({ onNavigate, onSelectPatient }) {
                   background: `${action.color}08`, cursor: 'pointer',
                   transition: 'all 0.25s ease', width: '100%', textAlign: 'left',
                   color: 'var(--color-text-primary)', fontSize: '13px', fontWeight: '500',
+                  WebkitTapHighlightColor: 'transparent',
                 }}
                 onMouseEnter={e => { 
                   e.currentTarget.style.background = `${action.color}15`; 
                   e.currentTarget.style.borderColor = `${action.color}35`; 
                   e.currentTarget.style.transform = 'translateX(4px)'; 
-                  e.currentTarget.style.boxShadow = "0 0 30px 30px rgba(46,230,201,0.3), 0 8px 32px rgba(0,0,0,0.3)";
                 }}
                 onMouseLeave={e => { 
                   e.currentTarget.style.background = `${action.color}08`; 
                   e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; 
                   e.currentTarget.style.transform = 'none'; 
-                  e.currentTarget.style.boxShadow = '';
                 }}>
                   <action.icon size={18} style={{ color: action.color }} />
                   <span style={{ flex: 1 }}>{action.label}</span>
