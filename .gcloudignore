@@ -1,0 +1,15 @@
+
+.git
+.gitignore
+.gcloudignore
+.pycache
+__pycache__/
+*.pyc
+venv/
+node_modules/
+frontend/node_modules/
+.env
+.pytest_cache/
+*.sqlite
+uploads/
+.vscode/
